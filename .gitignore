@@ -1,0 +1,17 @@
+node_modules/
+
+# Local credentials — never commit a real Huly token or password
+.env
+.env.*
+!.env.example
+claude_desktop_config.json
+
+# Logs
+*.log
+npm-debug.log*
+
+# Agent / editor / OS cruft
+.pi/
+.DS_Store
+.idea/
+.vscode/

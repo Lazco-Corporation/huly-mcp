@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "huly": {
+      "command": "node",
+      "args": ["/absolute/path/to/huly-mcp/src/index.js"],
+      "env": {
+        "HULY_URL": "https://huly.example.com",
+        "HULY_WORKSPACE": "my-workspace-slug",
+        "HULY_TOKEN": "your-token-here"
+      }
+    }
+  }
+}
