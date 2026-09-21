@@ -1,7 +1,17 @@
 {
-  "name": "@lazco/huly-mcp",
+  "name": "@lazco-studio/huly-mcp",
   "version": "1.0.0",
-  "description": "Model Context Protocol (MCP) server for Huly — read and write Huly documents and issues from Claude Desktop, Claude Code, or any MCP client",
+  "description": "MCP server for Huly: read and write Huly documents and issues from Claude Desktop, Claude Code, or any MCP client",
+  "license": "AGPL-3.0-or-later",
+  "author": "Lazco Corporation (拉資科科技有限公司)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lazco-Corporation/huly-mcp.git"
+  },
+  "homepage": "https://github.com/Lazco-Corporation/huly-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/Lazco-Corporation/huly-mcp/issues"
+  },
   "keywords": [
     "mcp",
     "model-context-protocol",
@@ -19,36 +29,27 @@
     "documents",
     "self-hosted"
   ],
-  "homepage": "https://github.com/Lazco-Corporation/huly-mcp#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Lazco-Corporation/huly-mcp.git"
+  "engines": {
+    "node": ">=20"
   },
-  "bugs": {
-    "url": "https://github.com/Lazco-Corporation/huly-mcp/issues"
-  },
-  "author": "Lazco Corporation",
-  "license": "AGPL-3.0-or-later",
   "main": "src/index.js",
   "bin": {
     "huly-mcp": "src/index.js"
   },
   "files": [
-    "src/",
-    "scripts/",
+    "src",
+    "scripts",
     "README.md",
     "LICENSE"
   ],
-  "engines": {
-    "node": ">=20"
-  },
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "start": "node src/index.js",
     "doctor": "node scripts/doctor.js",
-    "check": "node --check src/index.js && node --check src/huly.js && node --check scripts/doctor.js"
+    "check": "node --check src/index.js && node --check src/huly.js && node --check scripts/doctor.js",
+    "release": "bash scripts/release.sh"
   },
   "dependencies": {
     "@hcengineering/api-client": "0.7.423",

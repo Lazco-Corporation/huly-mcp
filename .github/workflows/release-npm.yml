@@ -1,0 +1,85 @@
+# Tag-driven npm release.
+#
+# Tag grammar: v<version>   e.g. v1.0.1, v2.0.0-beta.1
+#
+# The tag is created by `scripts/release.sh`, which runs `npm version`. That
+# command writes package.json, commits, and tags in one step, so the tag and
+# package.json always agree. This workflow re-checks that agreement anyway:
+# npm-publish fails when `expected-version` and package.json disagree.
+#
+# A prerelease version (v2.0.0-beta.1) goes to the `next` dist-tag, never
+# `latest`. npm-publish also refuses `latest` for a prerelease on its own.
+#
+# ── SHARED ACTIONS (ci-actions) ────────────────────────────────────────────
+# infisical-fetch and npm-publish come from Lazco-Corporation/ci-actions@v1.
+# Log and output format is defined there.
+#
+# ── CONFIG SOURCED FROM INFISICAL ──────────────────────────────────────────
+#   Project: lazco-huly-mcp   Path: /ci   Env-slug: prod
+#   NPM_TOKEN   npm automation token with publish rights on @lazco-studio
+#
+# The only GitHub-native config is the OIDC bootstrap:
+#   vars.INFISICAL_CI_IDENTITY_ID   Infisical machine-identity id
+#
+# This package ships plain CommonJS (see `files` in package.json), so there is
+# no build step. `npm run check` is the gate. Real verification is
+# `npm run doctor` against a live Huly instance, which CI cannot do.
+
+name: Release (npm)
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # the last step creates the GitHub release
+      id-token: write # npm provenance + Infisical OIDC
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Syntax check
+        run: npm run check
+
+      - uses: Lazco-Corporation/ci-actions/infisical-fetch@v1
+        with:
+          project-slug: lazco-huly-mcp
+          env-slug: prod
+          identity-id: ${{ vars.INFISICAL_CI_IDENTITY_ID }}
+          required-keys: NPM_TOKEN
+
+      - id: publish
+        uses: Lazco-Corporation/ci-actions/npm-publish@v1
+        with:
+          token: ${{ env.NPM_TOKEN }}
+          expected-version: ${{ github.ref_name }}
+          dist-tag: ${{ contains(github.ref_name, '-') && 'next' || 'latest' }}
+          package-manager: npm
+
+      - name: Create the GitHub release
+        if: steps.publish.outputs.result == 'published'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+          PRERELEASE: ${{ contains(github.ref_name, '-') }}
+        run: |
+          set -euo pipefail
+          args=(--generate-notes --title "$TAG")
+          if [ "$PRERELEASE" = "true" ]; then
+            args+=(--prerelease)
+          fi
+          gh release create "$TAG" "${args[@]}"

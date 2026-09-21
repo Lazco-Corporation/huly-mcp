@@ -52,8 +52,14 @@ cd huly-mcp
 npm install
 ```
 
-The package is published as `@lazco/huly-mcp`. The unscoped name `huly-mcp` on
-npm belongs to an unrelated project.
+Or install the published package:
+
+```bash
+npm install -g @lazco-studio/huly-mcp
+```
+
+The unscoped name `huly-mcp` on npm belongs to an unrelated project, so this one
+ships under the `@lazco-studio` scope.
 
 ## Configuration
 

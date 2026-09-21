@@ -78,10 +78,15 @@ jobs:
       - name: English only
         # Contributors come from everywhere; the project was translated once and
         # should not drift back.
+        #
+        # package.json is excluded on purpose: its author field carries the
+        # registered Chinese legal name, matching the other Lazco packages.
+        # LICENSE carries it too. Both are intentional, and this check must not
+        # name it either, or the check fails on itself.
         run: |
           if grep -rnP '[\p{Han}\p{Hiragana}\p{Katakana}\p{Hangul}]' \
               --include='*.js' --include='*.json' --include='*.yml' \
-              src/ scripts/ .github/ package.json; then
+              src/ scripts/ .github/; then
             echo "::error title=Non-English text::Code, config, and comments are English only. See CONTRIBUTING.md."
             exit 1
           fi

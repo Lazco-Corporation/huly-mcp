@@ -112,6 +112,23 @@ Huly moves quickly and `api-client` is pinned exactly (`0.7.423`) for that
 reason. If you bump it, say so explicitly in the pull request and re-run the
 full verification — a major bump has broken the content API before.
 
+## Releasing
+
+Maintainers only. Releases are tag-driven:
+
+```bash
+npm run release -- patch --dry-run   # show what would happen
+npm run release -- patch             # bump, tag, push
+```
+
+`scripts/release.sh` runs `npm version`, which bumps `package.json`, commits,
+and tags in one atomic step, so the tag and the manifest can never disagree.
+Pushing the tag is the whole ship action: `release-npm.yml` re-checks the
+version and publishes `@lazco-studio/huly-mcp` to npm with provenance.
+
+Never edit the `version` field by hand. A prerelease version goes to the `next`
+dist-tag, never `latest`.
+
 ## License
 
 Contributions are licensed under AGPL-3.0-or-later, matching the project. If
