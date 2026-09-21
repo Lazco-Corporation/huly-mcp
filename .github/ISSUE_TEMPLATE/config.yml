@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/Lazco-Corporation/huly-mcp/security/advisories/new
+    about: Report privately. Do not open a public issue. See SECURITY.md.
+  - name: Huly itself
+    url: https://github.com/hcengineering/platform/issues
+    about: Bugs in Huly or the @hcengineering packages belong upstream.
+  - name: Model Context Protocol SDK
+    url: https://github.com/modelcontextprotocol/typescript-sdk/issues
+    about: Bugs in the MCP SDK belong upstream.

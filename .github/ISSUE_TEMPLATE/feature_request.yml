@@ -1,0 +1,43 @@
+name: Feature request
+description: Propose a new tool or a change to an existing one
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        MCP clients bind to tool names and argument shapes, so adding, renaming,
+        or reshaping a tool is a compatibility contract. Please discuss it here
+        before opening a pull request.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do
+      description: Describe the task, not the solution. What should a model be able to accomplish that it cannot today?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed tool or change
+      description: If it is a new tool, sketch its name, arguments, and return shape.
+      placeholder: |
+        huly_create_issue(projectId, title, description?, priority?)
+        -> { created: true, id, identifier }
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Can this already be done by composing existing tools?
+
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - label: This belongs in the MCP layer, not upstream in Huly or the MCP SDK.
+          required: true

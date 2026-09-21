@@ -1,0 +1,94 @@
+# There is no unit test suite: this project's dependency surface is almost
+# entirely remote Huly state, so a mocked test would test the mock. CI therefore
+# checks what can be checked without an instance — syntax, install integrity, and
+# the two conventions that silently break things when violated.
+#
+# Real verification is `npm run doctor` against a live instance, which the pull
+# request template asks contributors to report.
+#
+# Runners: Lazco's GitHub-hosted runners are blocked by org billing, so this
+# matches ci-actions and uses Blacksmith. Swap in ubuntu-latest if that changes.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: check (node ${{ matrix.node }})
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['20', '22', '24']
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Syntax check
+        run: npm run check
+
+      - name: Server starts and reports missing configuration
+        # With no env vars the server must fail fast with a named variable
+        # rather than hanging or throwing an unhandled rejection.
+        run: |
+          set +e
+          output=$(node src/index.js 2>&1)
+          code=$?
+          set -e
+          echo "$output"
+          if [ "$code" -eq 0 ]; then
+            echo "::error title=Server did not fail::Expected a non-zero exit with no configuration"
+            exit 1
+          fi
+          if ! echo "$output" | grep -q 'HULY_URL'; then
+            echo "::error title=Unhelpful startup error::The failure message must name the missing variable"
+            exit 1
+          fi
+
+  conventions:
+    name: conventions
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: No stdout writes in the server
+        # stdout carries the MCP JSON-RPC stream. A stray console.log corrupts it
+        # and the client disconnects with a parse error that never names the cause.
+        run: |
+          if grep -rn 'console\.log' src/; then
+            echo "::error title=console.log in src/::stdout carries JSON-RPC. Use console.error instead."
+            exit 1
+          fi
+
+      - name: English only
+        # Contributors come from everywhere; the project was translated once and
+        # should not drift back.
+        run: |
+          if grep -rnP '[\p{Han}\p{Hiragana}\p{Katakana}\p{Hangul}]' \
+              --include='*.js' --include='*.json' --include='*.yml' \
+              src/ scripts/ .github/ package.json; then
+            echo "::error title=Non-English text::Code, config, and comments are English only. See CONTRIBUTING.md."
+            exit 1
+          fi
+
+      - name: No committed credentials
+        run: |
+          if git ls-files --error-unmatch claude_desktop_config.json 2>/dev/null; then
+            echo "::error title=Credentials committed::claude_desktop_config.json must never be tracked."
+            exit 1
+          fi

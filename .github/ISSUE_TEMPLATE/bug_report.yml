@@ -1,0 +1,88 @@
+name: Bug report
+description: Something does not work as documented
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before filing: run `npm run doctor` and include the output below. It
+        catches most configuration problems on its own.
+
+        **Never paste a real token, password, or workspace content.** Redact them.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what you got instead.
+      placeholder: |
+        Called huly_update_document with ...
+        Expected the body to change; the tool returned success but the document was unchanged.
+    validations:
+      required: true
+
+  - type: textarea
+    id: doctor
+    attributes:
+      label: npm run doctor output
+      description: Redact the URL and workspace slug if they are sensitive.
+      render: text
+    validations:
+      required: true
+
+  - type: input
+    id: huly-version
+    attributes:
+      label: Huly version
+      description: The VERSION field reported by `npm run doctor`.
+      placeholder: "0.7.426"
+    validations:
+      required: true
+
+  - type: input
+    id: node-version
+    attributes:
+      label: Node version
+      placeholder: "v24.12.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: deployment
+    attributes:
+      label: Deployment
+      options:
+        - Self-hosted Huly
+        - Huly Cloud (huly.app)
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: client
+    attributes:
+      label: MCP client
+      placeholder: "Claude Desktop 2.2553.1"
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: |
+        macOS Claude Desktop: `tail -n 100 ~/Library/Logs/Claude/mcp-server-huly.log`
+
+        Lines like `no document found, failed to apply model transaction, skipping`
+        are harmless Huly server noise; you can leave them out.
+      render: text
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I removed every token, password, and piece of workspace content from this report.
+          required: true
+        - label: I searched existing issues for a duplicate.
+          required: true
