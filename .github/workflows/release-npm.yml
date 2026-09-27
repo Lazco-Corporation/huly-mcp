@@ -16,7 +16,7 @@
 #
 # ── CONFIG SOURCED FROM INFISICAL ──────────────────────────────────────────
 #   Project: lazco-huly-mcp   Path: /ci   Env-slug: prod
-#   NPM_TOKEN   npm automation token with publish rights on @lazco-studio
+#   NPM_TOKEN   npm automation token with publish rights on @lazco
 #
 # The only GitHub-native config is the OIDC bootstrap:
 #   vars.INFISICAL_CI_IDENTITY_ID   Infisical machine-identity id

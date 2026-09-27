@@ -1,5 +1,5 @@
 {
-  "name": "@lazco-studio/huly-mcp",
+  "name": "@lazco/huly-mcp",
   "version": "1.0.0",
   "description": "MCP server for Huly: read and write Huly documents and issues from Claude Desktop, Claude Code, or any MCP client",
   "license": "AGPL-3.0-or-later",

@@ -55,11 +55,11 @@ npm install
 Or install the published package:
 
 ```bash
-npm install -g @lazco-studio/huly-mcp
+npm install -g @lazco/huly-mcp
 ```
 
 The unscoped name `huly-mcp` on npm belongs to an unrelated project, so this one
-ships under the `@lazco-studio` scope.
+ships under the `@lazco` scope.
 
 ## Configuration
 

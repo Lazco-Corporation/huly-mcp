@@ -124,7 +124,7 @@ npm run release -- patch             # bump, tag, push
 `scripts/release.sh` runs `npm version`, which bumps `package.json`, commits,
 and tags in one atomic step, so the tag and the manifest can never disagree.
 Pushing the tag is the whole ship action: `release-npm.yml` re-checks the
-version and publishes `@lazco-studio/huly-mcp` to npm with provenance.
+version and publishes `@lazco/huly-mcp` to npm with provenance.
 
 Never edit the `version` field by hand. A prerelease version goes to the `next`
 dist-tag, never `latest`.
