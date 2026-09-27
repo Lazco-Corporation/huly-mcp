@@ -43,6 +43,16 @@ jobs:
       contents: write # the last step creates the GitHub release
       id-token: write # npm provenance + Infisical OIDC
     steps:
+      # A tag can name a commit no branch holds, and a tag-triggered run uses
+      # the workflow file at the tagged ref. Refuse before anything is published.
+      - name: Refuse a tag that is not on main
+        uses: Lazco-Corporation/ci-actions/require-tag-on-main@v1
+        with:
+          repository: ${{ github.repository }}
+          sha: ${{ github.sha }}
+          ref-name: ${{ github.ref_name }}
+          token: ${{ github.token }}
+
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
